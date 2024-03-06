@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        form {
+            display: flex;
+            justify-content: center;
+        }
+
+        input {
+            margin: 20px;
+            padding: 10px;
+            border: 3px solid black;
+            border-radius: 10px;
+        }
+
+        #content {
+            border-color: transparent;
+            margin-left: 525px;
+            margin-top: 80px;
+            width: 30vw;
+            height: 60vh;
+            border-radius: 20px;
+            box-shadow: 0px 0px 10px 10px #888888;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #details {
+            /* border: 1px solid black; */
+            height: 29.5vh;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        img {
+            width: 100%;
+            height: 30vh;
+            border-radius: 20px;
+        }
+
+        table {
+            display: flex;
+            width: 250px;
+            height: 300px;
+            margin-top: 50px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: -175px;
+            margin-left: 50px;
+        }
+
+        tr {
+            /* display: block;
+            margin-bottom: 50px; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
+        }
+
+        td {
+            width: 200px;
+            height: 50px;
+            font-size: 23px;
+            color: rgb(232, 217, 217);
+            font-family: sans-serif;
+            font-weight: 900;
+            text-align: center;
+            
+        }
+        #submit:hover{
+            color: white;
+            background-color: blue;
+            transition-delay: 10ms;
+        }
+        #content:hover{
+            transform:scale(1.2);
+            transition-delay: 250ms;
+        }
+    </style>
+
+</head>
+
+<body>
+    <form action="">
+        <input type="search" placeholder="enter a palce">
+        <input id="submit" type="submit" value="submit">
+    </form>
+
+    <div id="content">
+
+        <div id="details">
+            <table>
+                <tr>
+                    <td>Temperature :</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Wind :</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Humidity :</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Pressure :</td>
+                    <td>0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        let td = document.getElementsByTagName("td")
+        let content=document.getElementById("content")
+        document.forms[0].addEventListener("submit", (e) => {
+
+
+            e.preventDefault()
+            let url = `https://api.openweathermap.org/data/2.5/weather?q=${e.target[0].value}&appid=f34c0f928e8a6afb49c62ec16f0c9a29`
+
+            fetch(url).then((val) => {
+                return val.json()
+            })
+                .then((val) => {
+                    console.log(val)
+                    let temperature = val["main"].temp
+                    let Wind = val["wind"]["speed"]
+                    let Humidity = val["wind"]["deg"]
+                    let Pressure = val["main"]["pressure"]
+                    let cloud=val["weather"]["main"]
+                    // console.log(cloud);
+                
+
+                    for(i=0;i<td.length;i++){
+                        td[i].style.color="white"
+                    }
+                    temperature = Math.floor(temperature - 273.15)
+                    if (temperature <= 10) {
+                        document.body.style.backgroundImage = "url(./dallas_snow_-_cc_-_dj_-_judah.jpg)";
+                        document.body.style.backgroundSize="cover"
+                        // box-shadow: 0px 0px 10px 10px #888888;
+                        content.style.boxShadow="0px 0px 10px 10px #888888"
+                    }
+                    else if(temperature>=25){
+                        document.body.style.backgroundImage = "url(./sunrise.jpg)";
+                        document.body.style.backgroundSize="cover"
+                        content.style.boxShadow="0px 0px 10px 10px #E67451"
+                    }
+                    else if(temperature<25&&temperature>10){
+                        document.body.style.backgroundImage = "url(./rain.avif)";
+                        document.body.style.backgroundSize="cover"
+                        document.body.style.backgroundPosition="center";	
+                        content.style.boxShadow="0px 0px 10px 10px #4a6583"
+                    }
+
+                    td[1].innerText = temperature+" °C"
+                    td[3].innerText = Wind+" km/h"
+                    td[5].innerText = Humidity+" %"
+                    td[7].innerText = Pressure+" hPa"
+                })
+
+
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>
